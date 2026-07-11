@@ -352,6 +352,15 @@ a:hover { text-decoration: underline; }
   transform: translate(-50%, -50%);
   will-change: transform;
 }
+
+/* ---------- Magical star cursor canvas ---------- */
+#star-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh; /* full viewport (spec typo: 100vw -> 100vh) */
+  pointer-events: none;       /* never blocks clicks/interactions */
+  z-index: 9998;              /* above content, just below the cursor follower */
+}
 .cursor-dot {
   width: 8px; height: 8px;
   background: #7dd3fc;
