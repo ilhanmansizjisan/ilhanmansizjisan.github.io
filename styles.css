@@ -112,11 +112,12 @@ a:hover { text-decoration: underline; }
   text-shadow: 0 6px 30px rgba(6,19,21,.7);
 }
 /* LAYER 2 — transparent cutout photo, in FRONT of the solid name.
-   Sits on the right so it overlaps the name's right side. */
+   Pulled in from the right edge so it overlaps a clear central band of
+   the name — that overlap zone is where the name flips to an outline. */
 .hero-photo {
-  position: absolute; right: 0; top: 50%;
+  position: absolute; right: clamp(40px, 10vw, 200px); top: 50%;
   transform: translateY(-50%);
-  height: clamp(320px, 64vh, 760px); width: auto;
+  height: clamp(340px, 72vh, 840px); width: auto;
   z-index: 2;
   pointer-events: none;
   filter: drop-shadow(0 18px 50px rgba(0,0,0,.55));
@@ -124,8 +125,8 @@ a:hover { text-decoration: underline; }
 /* LAYER 3 — transparent fill + crisp white outline, IN FRONT of the photo */
 .name-front {
   position: relative; z-index: 3;
-  color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.8);
-  text-stroke: 1px rgba(255,255,255,0.8);
+  color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.9);
+  text-stroke: 1.5px rgba(255,255,255,0.9);
   pointer-events: none; /* don't block links/buttons beneath */
 }
 /* keep the front copy exactly over the back copy */
@@ -305,7 +306,7 @@ a:hover { text-decoration: underline; }
   .about-grid { grid-template-columns: 1fr; }
   .hero { min-height: 88vh; justify-content: flex-start; text-align: left; }
   .hero-text { max-width: 100%; }
-  .hero-photo { height: clamp(260px, 48vh, 520px); opacity: 0.96; }
+  .hero-photo { height: clamp(260px, 48vh, 520px); right: 0; }
   .name .line.indent { margin-left: 2rem; }
 }
 
