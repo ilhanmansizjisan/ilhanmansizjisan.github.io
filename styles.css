@@ -80,15 +80,15 @@ a:hover { text-decoration: underline; }
   display: flex; align-items: center; justify-content: flex-start;
   padding: 2rem clamp(1.5rem, 6vw, 6rem);
   overflow: hidden; isolation: isolate;
-  background: transparent; /* global page photo shows through */
+  background: url("assets/profile.jpeg") right center / cover no-repeat;
 }
-/* readability scrim: clear on the left, darker toward the right where text sits */
+/* readability scrim: dark on the left where the name sits, clear on the right (your face) */
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(90deg,
-    rgba(6,19,21,0.82) 0%,
-    rgba(6,19,21,0.5) 50%,
-    rgba(6,19,21,0.1) 100%);
+    rgba(6,19,21,0.88) 0%,
+    rgba(6,19,21,0.6) 38%,
+    rgba(6,19,21,0.05) 70%);
 }
 .hero-text {
   position: relative; z-index: 1;
@@ -273,7 +273,7 @@ a:hover { text-decoration: underline; }
 @media (max-width: 820px) {
   .stage { padding: 6rem 1.1rem 3rem; }
   .about-grid { grid-template-columns: 1fr; }
-  .hero { min-height: 88vh; justify-content: center; text-align: left; background-position: center 30%; }
+  .hero { min-height: 88vh; justify-content: flex-start; text-align: left; background-position: right 30%; }
   .hero::before { background: linear-gradient(90deg, rgba(6,19,21,.35), rgba(6,19,21,.85)); }
   .hero-text { max-width: 100%; }
   .name .line.indent { margin-left: 2rem; }
