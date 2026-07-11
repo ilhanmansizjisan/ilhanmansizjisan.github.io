@@ -293,3 +293,54 @@ document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
   }
   requestAnimationFrame(loop);
 })();
+
+// Journey: horizontal story carousel
+// Prev/next buttons, dot indicators, keyboard arrows, and dot-sync on scroll.
+(() => {
+  const track = document.getElementById("jcarousel");
+  const dotsWrap = document.getElementById("jdots");
+  if (!track || !dotsWrap) return;
+
+  const cards = Array.from(track.children);
+  const prev = document.querySelector(".jprev");
+  const next = document.querySelector(".jnext");
+
+  // Build dot indicators
+  const dots = cards.map((_, i) => {
+    const d = document.createElement("span");
+    if (i === 0) d.classList.add("active");
+    d.addEventListener("click", () => scrollTo(i));
+    dotsWrap.appendChild(d);
+    return d;
+  });
+
+  function indexOfClosest() {
+    const mid = track.scrollLeft + track.clientWidth / 2;
+    let best = 0, bestDist = Infinity;
+    cards.forEach((c, i) => {
+      const cMid = c.offsetLeft + c.offsetWidth / 2;
+      const dist = Math.abs(cMid - mid);
+      if (dist < bestDist) { bestDist = dist; best = i; }
+    });
+    return best;
+  }
+
+  function syncDots() {
+    const i = indexOfClosest();
+    dots.forEach((d, k) => d.classList.toggle("active", k === i));
+  }
+
+  function scrollTo(i) {
+    const c = cards[Math.max(0, Math.min(cards.length - 1, i))];
+    track.scrollTo({ left: c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2, behavior: "smooth" });
+  }
+
+  prev && prev.addEventListener("click", () => scrollTo(indexOfClosest() - 1));
+  next && next.addEventListener("click", () => scrollTo(indexOfClosest() + 1));
+  track.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); scrollTo(indexOfClosest() + 1); }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); scrollTo(indexOfClosest() - 1); }
+  });
+  track.addEventListener("scroll", () => requestAnimationFrame(syncDots), { passive: true });
+  window.addEventListener("resize", syncDots);
+})();
