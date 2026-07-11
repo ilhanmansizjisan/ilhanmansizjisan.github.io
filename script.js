@@ -15,6 +15,86 @@ const io = new IntersectionObserver(
 );
 document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
+// Aurora background layer (extra motion over the looping video)
+(() => {
+  const canvas = document.getElementById("bgfx");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let w, h, dpr;
+  const blobs = [
+    { x: 0.25, y: 0.30, r: 320, c: [56, 189, 248] },
+    { x: 0.75, y: 0.55, r: 360, c: [37, 99, 235] },
+    { x: 0.55, y: 0.85, r: 300, c: [168, 85, 247] },
+  ];
+  let t = 0;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.clientWidth = window.innerWidth;
+    h = canvas.clientHeight = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function step() {
+    t += 0.0035;
+    ctx.clearRect(0, 0, w, h);
+    ctx.globalCompositeOperation = "lighter";
+    for (let i = 0; i < blobs.length; i++) {
+      const b = blobs[i];
+      const cx = (b.x + Math.sin(t + i) * 0.06) * w;
+      const cy = (b.y + Math.cos(t * 0.8 + i) * 0.06) * h;
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, b.r);
+      g.addColorStop(0, `rgba(${b.c[0]},${b.c[1]},${b.c[2]},0.55)`);
+      g.addColorStop(1, `rgba(${b.c[0]},${b.c[1]},${b.c[2]},0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(cx, cy, b.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+    requestAnimationFrame(step);
+  }
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  resize();
+  step();
+  window.addEventListener("resize", resize);
+})();
+
+// Custom cursor follower (dot + trailing ring)
+(() => {
+  const dot = document.querySelector(".cursor-dot");
+  const ring = document.querySelector(".cursor-ring");
+  if (!dot || !ring) return;
+  // Skip on touch / coarse-pointer devices
+  if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) {
+    dot.style.display = ring.style.display = "none";
+    return;
+  }
+  let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  let rx = mx, ry = my;
+
+  window.addEventListener("mousemove", (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+  });
+  // Ring trails behind with easing for a smooth "follow" effect
+  function follow() {
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+    requestAnimationFrame(follow);
+  }
+  follow();
+
+  // Grow the ring when hovering interactive elements
+  const interactive = "a, button, .btn, .socials a, .inline-link, .chip-list li";
+  document.querySelectorAll(interactive).forEach((el) => {
+    el.addEventListener("mouseenter", () => ring.classList.add("active"));
+    el.addEventListener("mouseleave", () => ring.classList.remove("active"));
+  });
+})();
+
 // Animated grid background (subtle cybersec-ish)
 (() => {
   const canvas = document.getElementById("grid");

@@ -9,15 +9,24 @@
   <meta property="og:description" content="Student at ADUST, cybersecurity enthusiast, content creator." />
   <meta property="og:type" content="profile" />
   <title>Ilhan Mansiz Jisan</title>
-  <link rel="icon" type="image/png" href="assets/adust-logo.png" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <!-- Animated background -->
   <div class="bg" aria-hidden="true">
+    <video class="bg-video" autoplay muted loop playsinline poster="">
+      <source src="assets/bg.mp4" type="video/mp4" />
+    </video>
+    <canvas id="bgfx"></canvas>
     <canvas id="grid"></canvas>
+    <div class="bg-overlay"></div>
     <div class="bg-glow"></div>
   </div>
+
+  <!-- Custom cursor follower -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
 
   <main class="container">
     <!-- HERO -->
