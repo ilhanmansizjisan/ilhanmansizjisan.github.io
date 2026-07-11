@@ -49,25 +49,6 @@ a:hover { text-decoration: underline; }
 }
 @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(-80px,60px); } }
 
-/* ============ Custom cursor ============ */
-.cursor-dot, .cursor-ring {
-  position: fixed; top: 0; left: 0; pointer-events: none;
-  z-index: 9999; border-radius: 50%;
-  transform: translate(-50%, -50%); will-change: transform;
-}
-#star-canvas {
-  position: fixed; top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  pointer-events: none; z-index: 9998;
-}
-.cursor-dot { width: 8px; height: 8px; background: #7dd3fc; box-shadow: 0 0 10px rgba(125,211,252,0.9); }
-.cursor-ring {
-  width: 34px; height: 34px; border: 2px solid rgba(125,211,252,0.6);
-  transition: width .18s ease, height .18s ease, border-color .18s ease, background .18s ease;
-}
-.cursor-ring.active { width: 52px; height: 52px; border-color: rgba(125,211,252,0.9); background: rgba(125,211,252,0.12); }
-@media (pointer: fine) { body { cursor: none; } a, button, .btn, .socials a, .inline-link { cursor: none; } }
-
 /* ============ Fixed editorial chrome ============ */
 .chrome {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
@@ -224,7 +205,7 @@ a:hover { text-decoration: underline; }
 .journey { overflow: hidden; }
 .journey .col-label { justify-content: space-between; }
 .jnav {
-  pointer-events: auto; cursor: none;
+  pointer-events: auto;
   width: 34px; height: 34px; border-radius: 50%;
   background: rgba(125,211,252,.08); border: 1px solid rgba(125,211,252,.3);
   color: #7dd3fc; font-size: 1.2rem; line-height: 1;
@@ -291,6 +272,5 @@ a:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .reveal { opacity: 1; transform: none; }
-  .cursor-dot, .cursor-ring, #star-canvas { display: none !important; }
   body, a, button, .btn, .socials a, .inline-link { cursor: auto; }
 }
