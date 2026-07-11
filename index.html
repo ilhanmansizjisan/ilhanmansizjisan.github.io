@@ -32,15 +32,27 @@
 
   <main class="stage">
 
-    <!-- HERO: full-cover background photo + overlaid text -->
+    <!-- HERO: typography layering (text sandwich) — name is solid white, turns to
+         outline where it overlaps the cutout photo.
+         Layer 1 (name-back, z1): solid white, behind the photo.
+         Layer 2 (hero-photo,  z2): transparent cutout of Ilhan, overlaps the name.
+         Layer 3 (name-front, z3): transparent fill + white stroke, in front of photo. -->
     <header class="hero reveal">
       <div class="hero-text">
         <p class="eyebrow">[ Hello, I'm ]</p>
-        <h1 class="name">
-          <span class="line">Ilhan</span>
-          <span class="line indent">Mansiz</span>
-          <span class="line">Jisan</span>
-        </h1>
+        <div class="name-stack">
+          <h1 class="name name-back" aria-hidden="true">
+            <span class="line">Ilhan</span>
+            <span class="line indent">Mansiz</span>
+            <span class="line">Jisan</span>
+          </h1>
+          <img class="hero-photo" src="assets/profile-cutout.png" alt="Ilhan Mansiz Jisan" />
+          <h1 class="name name-front">
+            <span class="line">Ilhan</span>
+            <span class="line indent">Mansiz</span>
+            <span class="line">Jisan</span>
+          </h1>
+        </div>
         <p class="tagline">
           BBA in Agribusiness @ ADUST · Cybersecurity enthusiast · Content creator
         </p>

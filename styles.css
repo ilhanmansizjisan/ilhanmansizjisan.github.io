@@ -74,36 +74,29 @@ a:hover { text-decoration: underline; }
   padding: 8rem 1.5rem 4rem;
 }
 
-/* ============ Hero — full-cover photo + overlaid text ============ */
+/* ============ Hero — typography layering (text sandwich) ============ */
+/* Opaque dark base so the page background photo stays hidden and the
+   solid-white name layer reads cleanly. */
 .hero {
   position: relative; min-height: 92vh;
   display: flex; align-items: center; justify-content: flex-start;
   padding: 2rem clamp(1.5rem, 6vw, 6rem);
   overflow: hidden; isolation: isolate;
-  background: url("assets/profile.jpeg") right center / cover no-repeat;
+  background:
+    radial-gradient(120% 120% at 15% 30%, #0c1f23 0%, var(--bg-deep) 55%, #04100f 100%);
+  background-color: var(--bg-deep);
 }
-/* readability scrim: dark on the left where the name sits, clear on the right (your face) */
-.hero::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(90deg,
-    rgba(6,19,21,0.88) 0%,
-    rgba(6,19,21,0.6) 38%,
-    rgba(6,19,21,0.05) 70%);
+/* layered stack that holds the three name/photo layers */
+.name-stack {
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
-.hero-text {
-  position: relative; z-index: 1;
-  max-width: 640px; width: 100%;
-  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
-}
-.eyebrow {
-  margin: 0 0 0.6rem; color: var(--accent); font-family: ui-monospace, monospace;
-  font-size: 0.9rem; letter-spacing: 0.14em; text-transform: uppercase;
-}
+/* shared name typography for both copies */
 .name {
   margin: 0; font-weight: 800; letter-spacing: -0.03em; line-height: 0.92;
   font-size: clamp(3rem, 11vw, 8rem);
-  text-transform: uppercase; color: var(--text);
-  text-shadow: 0 6px 30px rgba(6,19,21,.7);
+  text-transform: uppercase;
 }
 .name .line { display: block; }
 .name .line.indent { margin-left: clamp(1rem, 12vw, 8rem); }
@@ -111,6 +104,43 @@ a:hover { text-decoration: underline; }
 .name .line:nth-child(2) { animation: drop .6s cubic-bezier(.2,.8,.2,1) .08s backwards; }
 .name .line:nth-child(3) { animation: drop .6s cubic-bezier(.2,.8,.2,1) .16s backwards; }
 @keyframes drop { 0% { opacity: 0; transform: translateY(-40px) rotateX(40deg); } 100% { opacity: 1; transform: none; } }
+
+/* LAYER 1 — solid white name, BEHIND the photo */
+.name-back {
+  position: absolute; left: 0; top: 0; z-index: 1;
+  color: #ffffff;
+  text-shadow: 0 6px 30px rgba(6,19,21,.7);
+}
+/* LAYER 2 — transparent cutout photo, in FRONT of the solid name.
+   Sits on the right so it overlaps the name's right side. */
+.hero-photo {
+  position: absolute; right: 0; top: 50%;
+  transform: translateY(-50%);
+  height: clamp(320px, 64vh, 760px); width: auto;
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 50px rgba(0,0,0,.55));
+}
+/* LAYER 3 — transparent fill + crisp white outline, IN FRONT of the photo */
+.name-front {
+  position: relative; z-index: 3;
+  color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.8);
+  text-stroke: 1px rgba(255,255,255,0.8);
+  pointer-events: none; /* don't block links/buttons beneath */
+}
+/* keep the front copy exactly over the back copy */
+.name-front .line { /* inherits alignment from .name */ }
+
+.eyebrow {
+  margin: 0 0 0.6rem; color: var(--accent); font-family: ui-monospace, monospace;
+  font-size: 0.9rem; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.hero-text {
+  position: relative; z-index: 1;
+  max-width: 760px; width: 100%;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+}
+/* front name copy needs a min height so the absolutely-positioned back copy has a box */
 
 .hero-text .tagline { margin: 1.4rem 0; color: var(--text); font-size: 1.05rem; max-width: 36ch; text-shadow: 0 2px 16px rgba(6,19,21,.8); }
 .hero-text .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
@@ -273,9 +303,9 @@ a:hover { text-decoration: underline; }
 @media (max-width: 820px) {
   .stage { padding: 6rem 1.1rem 3rem; }
   .about-grid { grid-template-columns: 1fr; }
-  .hero { min-height: 88vh; justify-content: flex-start; text-align: left; background-position: right 30%; }
-  .hero::before { background: linear-gradient(90deg, rgba(6,19,21,.35), rgba(6,19,21,.85)); }
+  .hero { min-height: 88vh; justify-content: flex-start; text-align: left; }
   .hero-text { max-width: 100%; }
+  .hero-photo { height: clamp(260px, 48vh, 520px); opacity: 0.96; }
   .name .line.indent { margin-left: 2rem; }
 }
 
