@@ -1,10 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0ea5e9"/>
-      <stop offset="1" stop-color="#2563eb"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a181b"/>
+      <stop offset="1" stop-color="#061315"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#00d4c8"/>
+      <stop offset="1" stop-color="#ff8c00"/>
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#g)"/>
-  <text x="32" y="43" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1">IM</text>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <!-- stem -->
+  <path d="M32 52 C 32 44, 32 38, 32 30" stroke="url(#leaf)" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- left leaf -->
+  <path d="M32 36 C 20 34, 14 24, 16 14 C 28 14, 34 22, 32 36 Z" fill="url(#leaf)"/>
+  <!-- right leaf -->
+  <path d="M32 30 C 44 28, 50 18, 48 9 C 36 9, 30 17, 32 30 Z" fill="url(#leaf)" opacity="0.85"/>
+  <!-- seed/base dot -->
+  <circle cx="32" cy="54" r="3" fill="#ff8c00"/>
 </svg>
