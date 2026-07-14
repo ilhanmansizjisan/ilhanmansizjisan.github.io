@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Cinematic Clock — a live clock with location & timezone, and a Google-style task list. A project by Ilhan Mansiz Jisan." />
+  <meta name="theme-color" content="#0a181b" />
+  <title>Cinematic Clock · Ilhan Mansiz Jisan</title>
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="clock.css" />
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <a class="back-link" href="../../">← Back to home</a>
+
+  <main class="clock-stage">
+    <!-- LEFT: cinematic clock -->
+    <section class="clock-side">
+      <div class="clock-wrap">
+        <div class="clock-time" id="time">--:--:--</div>
+        <div class="clock-date" id="date">—</div>
+        <div class="clock-meta">
+          <span id="location">Locating…</span>
+          <span class="clock-tz" id="tz">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Google-style tasks -->
+    <section class="tasks-side">
+      <div class="tasks-card">
+        <header class="tasks-head">
+          <h1>Tasks</h1>
+          <span class="tasks-count" id="count">0 open</span>
+        </header>
+
+        <form class="task-add" id="add-form">
+          <span class="add-plus" aria-hidden="true">+</span>
+          <input id="add-input" type="text" placeholder="Add a task" autocomplete="off" />
+        </form>
+
+        <ul class="task-list" id="list"></ul>
+        <p class="tasks-empty" id="empty">No tasks yet. Add one above.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="clock.js" defer></script>
+</body>
+</html>

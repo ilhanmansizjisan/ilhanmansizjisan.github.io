@@ -292,6 +292,27 @@ a:hover { text-decoration: underline; }
 }
 .socials a:hover { background: rgba(0,212,200,.15); color: var(--accent-2); transform: translateY(-3px) scale(1.05); text-decoration: none; }
 
+/* ============ Projects list (roman-numeral) ============ */
+.projects-lead { color: var(--text-dim); margin: 0 0 1rem; }
+.proj-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .7rem; counter-reset: proj; }
+.proj-link {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.1rem; border-radius: 12px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--card-border);
+  color: var(--text); transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+.proj-link:hover { text-decoration: none; border-color: rgba(255,140,0,.5); background: rgba(255,140,0,.06); transform: translateX(4px); }
+.proj-num {
+  flex-shrink: 0; min-width: 2.2rem; text-align: center;
+  font-family: ui-monospace, monospace; font-size: 1.25rem; font-weight: 700;
+  color: var(--accent); letter-spacing: .04em;
+}
+.proj-body { display: flex; flex-direction: column; gap: .15rem; flex: 1; }
+.proj-title { font-weight: 600; font-size: 1.05rem; color: var(--text); }
+.proj-desc { color: var(--text-dim); font-size: .92rem; }
+.proj-arrow { flex-shrink: 0; color: var(--accent-2); font-size: 1.2rem; transition: transform .2s ease; }
+.proj-link:hover .proj-arrow { transform: translate(3px,-3px); color: var(--accent); }
+
 /* ============ Footer ============ */
 .foot { text-align: center; color: var(--text-dim); font-size: .85rem; margin-top: 2.5rem; }
 .foot p { margin: 0; }
