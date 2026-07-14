@@ -1,56 +1,54 @@
 // ============================================================
-// Crop Price Tracker — deterministic sample data + canvas chart
+// ফসলের মূল্য ট্র্যাকার — নির্ধারিত নমুনা তথ্য + ক্যানভাস চার্ট
 // ============================================================
 (() => {
   "use strict";
 
-  // ---- Crop definitions: base wholesale BDT/kg + seasonal swing ----
+  // ---- ফসলের সংজ্ঞা: ভিত্তি পাইকারি দাম (টাকা/কেজি) + মৌসুমি ওঠানামা ----
   const CROPS = [
-    { key: "rice_coarse", name: "Rice (coarse)", base: 42, swing: 6,  unit: "kg" },
-    { key: "rice_miniket", name: "Rice (Miniket)", base: 62, swing: 8,  unit: "kg" },
-    { key: "potato",      name: "Potato",        base: 28, swing: 16, unit: "kg" },
-    { key: "onion",       name: "Onion",         base: 55, swing: 30, unit: "kg" },
-    { key: "garlic",      name: "Garlic",        base: 130, swing: 35, unit: "kg" },
-    { key: "tomato",      name: "Tomato",        base: 40, swing: 28, unit: "kg" },
-    { key: "brinjal",     name: "Brinjal",       base: 35, swing: 18, unit: "kg" },
-    { key: "chilli",      name: "Green Chilli",  base: 90, swing: 60, unit: "kg" },
-    { key: "jute",        name: "Jute (raw)",    base: 30, swing: 10, unit: "kg" },
-    { key: "wheat",       name: "Wheat",         base: 38, swing: 5,  unit: "kg" },
-    { key: "mustard",     name: "Mustard seed",  base: 70, swing: 12, unit: "kg" },
-    { key: "sugarcane",   name: "Sugarcane",     base: 5,  swing: 2,  unit: "kg" },
+    { key: "rice_coarse", name: "চাল (মোটা)",     base: 42,  swing: 6,  unit: "কেজি" },
+    { key: "rice_miniket", name: "চাল (মিনিকেট)", base: 62,  swing: 8,  unit: "কেজি" },
+    { key: "potato",      name: "আলু",            base: 28,  swing: 16, unit: "কেজি" },
+    { key: "onion",       name: "পেঁয়াজ",         base: 55,  swing: 30, unit: "কেজি" },
+    { key: "garlic",      name: "রসুন",           base: 130, swing: 35, unit: "কেজি" },
+    { key: "tomato",      name: "টমেটো",          base: 40,  swing: 28, unit: "কেজি" },
+    { key: "brinjal",     name: "বেগুন",          base: 35,  swing: 18, unit: "কেজি" },
+    { key: "chilli",      name: "কাঁচা মরিচ",     base: 90,  swing: 60, unit: "কেজি" },
+    { key: "jute",        name: "পাট (কাঁচা)",     base: 30,  swing: 10, unit: "কেজি" },
+    { key: "wheat",       name: "গম",             base: 38,  swing: 5,  unit: "কেজি" },
+    { key: "mustard",     name: "সরিষা",          base: 70,  swing: 12, unit: "কেজি" },
+    { key: "sugarcane",   name: "আখ",             base: 5,   swing: 2,  unit: "কেজি" },
   ];
 
-  // ---- Markets: name + price multiplier (regional wholesale diff) ----
+  // ---- বাজার: নাম + আঞ্চলিক মূল্য গুণক ----
   const MARKETS = [
-    { key: "tangail",  name: "Tangail",        mult: 0.97 },
-    { key: "dhaka",    name: "Dhaka (Karwan Bazar)", mult: 1.05 },
-    { key: "sherpur",  name: "Sherpur",        mult: 0.95 },
-    { key: "bogura",   name: "Bogura",         mult: 0.99 },
-    { key: "chattogram", name: "Chattogram",   mult: 1.03 },
+    { key: "tangail",    name: "টাঙ্গাইল",              mult: 0.97 },
+    { key: "dhaka",      name: "ঢাকা (কারওয়ান বাজার)", mult: 1.05 },
+    { key: "sherpur",    name: "শেরপুর",                mult: 0.95 },
+    { key: "bogura",     name: "বগুড়া",                mult: 0.99 },
+    { key: "chattogram", name: "চট্টগ্রাম",            mult: 1.03 },
   ];
 
-  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const MONTHS = ["জানু","ফেব্রু","মার্চ","এপ্রি","মে","জুন","জুলা","আগ","সেপ্টে","অক্টো","নভে","ডিসে"];
 
-  // Deterministic pseudo-random in [0,1) from a string seed — stable across reloads
+  // নির্ধারিত ছদ্ম-এলোমেলো (স্থিতিশীল, রিলোড-এর পরও একই)
   function seeded(str) {
     let h = 2166136261;
     for (let i = 0; i < str.length; i++) {
       h ^= str.charCodeAt(i);
       h = Math.imul(h, 16777619);
     }
-    // xorshift-ish to spread bits
     h ^= h << 13; h ^= h >>> 17; h ^= h << 5;
     return ((h >>> 0) % 100000) / 100000;
   }
 
-  // Build the last 12 months of data ending this month
+  // শেষ ১২ মাসের তথ্য তৈরি (এই মাসে শেষ)
   function buildSeries(market, crop) {
     const now = new Date();
     const endMonth = now.getMonth();
     const out = [];
     for (let i = 11; i >= 0; i--) {
       let m = (endMonth - i + 12) % 12;
-      // seasonal shape: lower mid-year (harvest), higher before harvest
       const season = Math.sin(((m + 3) / 12) * Math.PI * 2); // -1..1
       const noise = (seeded(`${market.key}:${crop.key}:${m}`) - 0.5) * 2; // -1..1
       const price = crop.base * market.mult
@@ -98,22 +96,22 @@
     const pct = (delta / first) * 100;
 
     document.getElementById("latest").textContent = `৳${latest.toFixed(1)}`;
-    document.getElementById("latest-month").textContent = `${data[data.length - 1].month} · per ${crop.unit}`;
+    document.getElementById("latest-month").textContent = `${data[data.length - 1].month} · প্রতি ${crop.unit}`;
     document.getElementById("avg").textContent = `৳${avg.toFixed(1)}`;
-    document.getElementById("avg-sub").textContent = `per ${crop.unit}`;
+    document.getElementById("avg-sub").textContent = `প্রতি ${crop.unit}`;
     document.getElementById("range").textContent = `৳${min.toFixed(0)}–${max.toFixed(0)}`;
 
     const trendEl = document.getElementById("trend");
     trendEl.textContent = `${delta >= 0 ? "▲" : "▼"} ${Math.abs(pct).toFixed(1)}%`;
     trendEl.classList.toggle("up", delta >= 0);
     trendEl.classList.toggle("down", delta < 0);
-    document.getElementById("trend-sub").textContent = `${first.toFixed(0)} → ${latest.toFixed(0)} BDT`;
+    document.getElementById("trend-sub").textContent = `${first.toFixed(0)} → ${latest.toFixed(0)} টাকা`;
 
     drawChart(data, crop);
-    document.title = `${crop.name} · ${market.name} — Crop Price Tracker`;
+    document.title = `${crop.name} · ${market.name} — ফসলের মূল্য ট্র্যাকার`;
   }
 
-  // ---- Canvas line chart (no libraries) ----
+  // ---- ক্যানভাস লাইন চার্ট (কোনো লাইব্রেরি ছাড়া) ----
   function drawChart(data, crop) {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const cssW = chart.clientWidth, cssH = 320;
@@ -133,7 +131,6 @@
     const x = (i) => padL + (w * i) / (data.length - 1);
     const y = (v) => padT + h - ((v - lo) / (hi - lo)) * h;
 
-    // grid + y labels
     ctx.font = "11px ui-monospace, monospace";
     ctx.textBaseline = "middle";
     const steps = 4;
@@ -148,7 +145,6 @@
       ctx.fillText("৳" + v.toFixed(0), padL - 8, yy);
     }
 
-    // x labels (every other month to avoid crowding)
     ctx.fillStyle = "rgba(159,180,183,0.7)";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
@@ -158,7 +154,6 @@
       }
     });
 
-    // area fill
     const grad = ctx.createLinearGradient(0, padT, 0, padT + h);
     grad.addColorStop(0, "rgba(255,140,0,0.35)");
     grad.addColorStop(1, "rgba(255,140,0,0.0)");
@@ -171,7 +166,6 @@
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // line
     ctx.beginPath();
     prices.forEach((p, i) => (i ? ctx.lineTo(x(i), y(p)) : ctx.moveTo(x(i), y(p))));
     ctx.strokeStyle = "#ff8c00";
@@ -179,7 +173,6 @@
     ctx.lineJoin = "round";
     ctx.stroke();
 
-    // points
     prices.forEach((p, i) => {
       ctx.beginPath();
       ctx.arc(x(i), y(p), 3, 0, Math.PI * 2);
@@ -188,12 +181,11 @@
       ctx.lineWidth = 2; ctx.strokeStyle = "#00d4c8"; ctx.stroke();
     });
 
-    // latest value label
     const lastPrice = prices[prices.length - 1];
     const lx = x(prices.length - 1), ly = y(lastPrice);
     ctx.fillStyle = "#00d4c8";
     ctx.textAlign = "right"; ctx.textBaseline = "bottom";
-    ctx.fillText("৳" + prices[prices.length - 1].toFixed(1), lx - 6, ly - 6);
+    ctx.fillText("৳" + lastPrice.toFixed(1), lx - 6, ly - 6);
   }
 
   marketSel.addEventListener("change", update);

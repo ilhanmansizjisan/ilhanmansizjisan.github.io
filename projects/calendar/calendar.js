@@ -1,55 +1,53 @@
 // ============================================================
-// Seasonal Crop Calendar — Bangladesh (central belt)
-// Each crop has sow/grow/harvest month sets (1-12). Filter by type.
+// মৌসুমি ফসলের ক্যালেন্ডার — বাংলাদেশ (মধ্য অঞ্চল)
+// প্রতিটি ফসলের বুনন/বেড়ে ওঠা/তোলার মাস-সেট (১-১২)। ধরন অনুযায়ী ছাঁকুন।
 // ============================================================
 (() => {
   "use strict";
 
   const MONTHS = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "জানু", "ফেব্রু", "মার্চ", "এপ্রি", "মে", "জুন",
+    "জুলা", "আগ", "সেপ্টে", "অক্টো", "নভে", "ডিসে",
   ];
-  const SEASONS = ["Winter", "Spring", "Summer", "Monsoon", "Autumn", "Late Autumn"];
-  // season per month index (rough, central BD)
-  const SEASON_OF = ["Winter","Winter","Spring","Spring","Summer","Summer","Monsoon","Monsoon","Monsoon","Autumn","Autumn","Late Autumn"];
+  const SEASON_OF = ["শীত","শীত","বসন্ত","বসন্ত","গ্রীষ্ম","গ্রীষ্ম","বর্ষা","বর্ষা","বর্ষা","শরৎ","শরৎ","হেমন্ত"];
 
   // type: cereal | veg | pulse | cash | fruit
   const CROPS = [
-    { name: "Rice (Boro)",  type: "cereal", sow: [11,12,1],  grow: [1,2,3,4],  harvest: [4,5] },
-    { name: "Rice (Aus)",   type: "cereal", sow: [2,3],       grow: [3,4,5,6],  harvest: [6,7] },
-    { name: "Rice (Aman)",  type: "cereal", sow: [6,7],       grow: [7,8,9,10], harvest: [10,11] },
-    { name: "Wheat",        type: "cereal", sow: [11,12],     grow: [12,1,2],   harvest: [2,3] },
-    { name: "Maize",        type: "cereal", sow: [10,11,1,2], grow: [11,12,1,2,3,4], harvest: [3,4,5] },
-    { name: "Potato",       type: "veg",    sow: [11,12],     grow: [12,1],     harvest: [1,2] },
-    { name: "Onion",        type: "veg",    sow: [9,10],      grow: [10,11,12], harvest: [12,1,2] },
-    { name: "Garlic",       type: "veg",    sow: [10,11],     grow: [11,12,1],  harvest: [1,2] },
-    { name: "Tomato",       type: "veg",    sow: [9,10],      grow: [10,11,12], harvest: [12,1,2] },
-    { name: "Brinjal",      type: "veg",    sow: [9,10],      grow: [10,11,12,1], harvest: [12,1,2,3] },
-    { name: "Chilli",       type: "veg",    sow: [9,10,11],   grow: [10,11,12,1], harvest: [12,1,2,3] },
-    { name: "Cabbage",      type: "veg",    sow: [10,11],     grow: [11,12],    harvest: [12,1] },
-    { name: "Sweet gourd",  type: "veg",    sow: [10,11],     grow: [11,12,1],  harvest: [12,1,2] },
-    { name: "Beans",        type: "veg",    sow: [10,11],     grow: [11,12],    harvest: [12,1] },
-    { name: "Lentil (Masur)", type: "pulse", sow: [10,11],   grow: [11,12],    harvest: [1,2] },
-    { name: "Mung bean",    type: "pulse",  sow: [2,3,6,7],   grow: [3,4,7,8],  harvest: [4,5,8,9] },
-    { name: "Chickpea (Gram)", type: "pulse", sow: [10,11],  grow: [11,12,1],  harvest: [1,2] },
-    { name: "Jute",         type: "cash",   sow: [3,4],       grow: [4,5,6,7],  harvest: [7,8] },
-    { name: "Cotton",       type: "cash",   sow: [3,4],       grow: [4,5,6,7,8], harvest: [8,9] },
-    { name: "Sugarcane",    type: "cash",   sow: [2,3],       grow: [3,4,5,6,7,8,9,10,11,12,1], harvest: [11,12,1,2] },
-    { name: "Mustard",      type: "cash",   sow: [10,11],     grow: [11,12],    harvest: [1,2] },
-    { name: "Sunflower",    type: "cash",   sow: [10,11],     grow: [11,12],    harvest: [1,2] },
-    { name: "Mango",        type: "fruit",  sow: [6,7],       grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [5,6,7] },
-    { name: "Banana",       type: "fruit",  sow: [3,4,5,6,7], grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [1,2,3,4,5,6,7,8,9,10,11,12] },
-    { name: "Guava",        type: "fruit",  sow: [6,7],       grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [8,9,10,11,12] },
-    { name: "Papaya",       type: "fruit",  sow: [2,3,4,5,6], grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [1,2,3,4,5,6,7,8,9,10,11,12] },
+    { name: "ধান (বোরো)",   type: "cereal", sow: [11,12,1],  grow: [1,2,3,4],  harvest: [4,5] },
+    { name: "ধান (আউশ)",    type: "cereal", sow: [2,3],       grow: [3,4,5,6],  harvest: [6,7] },
+    { name: "ধান (আমন)",    type: "cereal", sow: [6,7],       grow: [7,8,9,10], harvest: [10,11] },
+    { name: "গম",           type: "cereal", sow: [11,12],     grow: [12,1,2],   harvest: [2,3] },
+    { name: "ভুট্টা",        type: "cereal", sow: [10,11,1,2], grow: [11,12,1,2,3,4], harvest: [3,4,5] },
+    { name: "আলু",          type: "veg",    sow: [11,12],     grow: [12,1],     harvest: [1,2] },
+    { name: "পেঁয়াজ",        type: "veg",    sow: [9,10],      grow: [10,11,12], harvest: [12,1,2] },
+    { name: "রসুন",         type: "veg",    sow: [10,11],     grow: [11,12,1],  harvest: [1,2] },
+    { name: "টমেটো",        type: "veg",    sow: [9,10],      grow: [10,11,12], harvest: [12,1,2] },
+    { name: "বেগুন",         type: "veg",    sow: [9,10],      grow: [10,11,12,1], harvest: [12,1,2,3] },
+    { name: "কাঁচা মরিচ",     type: "veg",    sow: [9,10,11],   grow: [10,11,12,1], harvest: [12,1,2,3] },
+    { name: "বাঁধাকপি",      type: "veg",    sow: [10,11],     grow: [11,12],    harvest: [12,1] },
+    { name: "মিষ্টি কুমড়া",   type: "veg",    sow: [10,11],     grow: [11,12,1],  harvest: [12,1,2] },
+    { name: "শিম",          type: "veg",    sow: [10,11],     grow: [11,12],    harvest: [12,1] },
+    { name: "মসুর ডাল",      type: "pulse",  sow: [10,11],     grow: [11,12],    harvest: [1,2] },
+    { name: "মুগ ডাল",       type: "pulse",  sow: [2,3,6,7],   grow: [3,4,7,8],  harvest: [4,5,8,9] },
+    { name: "ছোলা",         type: "pulse",  sow: [10,11],     grow: [11,12,1],  harvest: [1,2] },
+    { name: "পাট",          type: "cash",   sow: [3,4],       grow: [4,5,6,7],  harvest: [7,8] },
+    { name: "তুলা",         type: "cash",   sow: [3,4],       grow: [4,5,6,7,8], harvest: [8,9] },
+    { name: "আখ",          type: "cash",   sow: [2,3],       grow: [3,4,5,6,7,8,9,10,11,12,1], harvest: [11,12,1,2] },
+    { name: "সরিষা",        type: "cash",   sow: [10,11],     grow: [11,12],    harvest: [1,2] },
+    { name: "সূর্যমুখী",      type: "cash",   sow: [10,11],     grow: [11,12],    harvest: [1,2] },
+    { name: "আম",           type: "fruit",  sow: [6,7],       grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [5,6,7] },
+    { name: "কলা",          type: "fruit",  sow: [3,4,5,6,7], grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [1,2,3,4,5,6,7,8,9,10,11,12] },
+    { name: "পেয়ারা",        type: "fruit",  sow: [6,7],       grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [8,9,10,11,12] },
+    { name: "পপেয়া",       type: "fruit",  sow: [2,3,4,5,6], grow: [1,2,3,4,5,6,7,8,9,10,11,12], harvest: [1,2,3,4,5,6,7,8,9,10,11,12] },
   ];
 
   const TYPES = [
-    { key: "all",    label: "All" },
-    { key: "cereal", label: "Cereals" },
-    { key: "veg",    label: "Vegetables" },
-    { key: "pulse",  label: "Pulses" },
-    { key: "cash",   label: "Cash crops" },
-    { key: "fruit",  label: "Fruits" },
+    { key: "all",    label: "সব" },
+    { key: "cereal", label: "শস্য" },
+    { key: "veg",    label: "সবজি" },
+    { key: "pulse",  label: "ডাল" },
+    { key: "cash",   label: "নগদ ফসল" },
+    { key: "fruit",  label: "ফল" },
   ];
 
   const filtersEl = document.getElementById("filters");
@@ -87,9 +85,9 @@
       card.className = "month-card" + (i === nowMonth ? " now" : "");
 
       const phases = [
-        { key: "sow", label: "Sow" },
-        { key: "grow", label: "Growing" },
-        { key: "harvest", label: "Harvest" },
+        { key: "sow", label: "বুনুন" },
+        { key: "grow", label: "বড় হচ্ছে" },
+        { key: "harvest", label: "তুলুন" },
       ];
 
       let groups = "";

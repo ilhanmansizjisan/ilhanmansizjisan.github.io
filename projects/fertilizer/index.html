@@ -1,77 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Fertilizer & Dose Calculator — pick a crop and land size to get an indicative N-P-K recommendation. A project by Ilhan Mansiz Jisan." />
+  <meta name="description" content="সার ও মাত্রা ক্যালকুলেটর — ফসল ও জমির আয়তন দিয়ে সূচনামূলক এন-পি-কে সুপারিশ। ইলহান মানসিজ জিসানের প্রকল্প।" />
   <meta name="theme-color" content="#0a181b" />
-  <title>Fertilizer & Dose Calculator · Ilhan Mansiz Jisan</title>
+  <title>সার ও মাত্রা ক্যালকুলেটর · ইলহান মানসিজ জিসান</title>
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="fertilizer.css" />
 </head>
 <body>
   <div class="bg-glow"></div>
 
-  <a class="back-link" href="../../">← Back to home</a>
+  <a class="back-link" href="../../">← হোমে ফিরুন</a>
 
   <main class="fz-stage">
     <header class="fz-head">
-      <p class="eyebrow">[ Project ]</p>
-      <h1>Fertilizer &amp; Dose Calculator</h1>
+      <p class="eyebrow">[ প্রকল্প ]</p>
+      <h1>সার ও মাত্রা ক্যালকুলেটর</h1>
       <p class="lead">
-        Pick a crop and enter your land area to get an <strong>indicative</strong>
-        N–P–K recommendation and the bag counts you'd typically buy.
+        একটি ফসল এবং জমির আয়তন বেছে নিন, তাহলে একটি <strong>সূচনামূলক</strong>
+        এন–পি–কে (N–P–K) সুপারিশ এবং কেনা বস্তার সংখ্যা পাবেন।
       </p>
       <p class="note">
-        Educational estimate based on common Bangladeshi practice. Always confirm
-        doses with your local Agriculture Extension Officer (DAE) and a soil test.
+        শিক্ষামূলক অনুমান — বাংলাদেশের প্রচলিত পদ্ধতির ওপর ভিত্তি করে।
+        সর্বদা স্থানীয় কৃষি সম্প্রসারণ কর্মকর্তা (ডিএই) এবং মাটি পরীক্ষার সাথে মিলিয়ে নিন।
       </p>
     </header>
 
     <section class="fz-card">
       <div class="fz-controls">
         <label class="field">
-          <span class="field-label">Crop</span>
+          <span class="field-label">ফসল</span>
           <select id="crop" class="select"></select>
         </label>
         <label class="field">
-          <span class="field-label">Land area</span>
+          <span class="field-label">জমির আয়তন</span>
           <div class="area-row">
             <input id="area" class="input" type="number" min="0" step="0.01" value="1" />
             <select id="unit" class="select small">
-              <option value="acre">acre</option>
-              <option value="hectare">hectare</option>
-              <option value="bigha">bigha</option>
-              <option value="decimal">decimal</option>
+              <option value="acre">একর</option>
+              <option value="hectare">হেক্টর</option>
+              <option value="bigha">বিঘা</option>
+              <option value="decimal">ডেসিমাল</option>
             </select>
           </div>
         </label>
         <label class="field">
-          <span class="field-label">Soil status</span>
+          <span class="field-label">মাটির অবস্থা</span>
           <select id="soil" class="select">
-            <option value="med">Medium (default)</option>
-            <option value="low">Low / depleted</option>
-            <option value="high">High / fertile</option>
+            <option value="med">মাঝারি (ডিফল্ট)</option>
+            <option value="low">কম / দরিদ্র</option>
+            <option value="high">উর্বর</option>
           </select>
         </label>
       </div>
 
       <div class="npk-grid">
-        <div class="npk-card n"><span class="npk-tag">N</span><span class="npk-name">Nitrogen</span><span class="npk-val" id="n-val">—</span><span class="npk-unit">kg / ha</span></div>
-        <div class="npk-card p"><span class="npk-tag">P</span><span class="npk-name">Phosphorus (P₂O₅)</span><span class="npk-val" id="p-val">—</span><span class="npk-unit">kg / ha</span></div>
-        <div class="npk-card k"><span class="npk-tag">K</span><span class="npk-name">Potassium (K₂O)</span><span class="npk-val" id="k-val">—</span><span class="npk-unit">kg / ha</span></div>
+        <div class="npk-card n"><span class="npk-tag">N</span><span class="npk-name">নাইট্রোজেন</span><span class="npk-val" id="n-val">—</span><span class="npk-unit">কেজি / হেক্টর</span></div>
+        <div class="npk-card p"><span class="npk-tag">P</span><span class="npk-name">ফসফরাস (P₂O₅)</span><span class="npk-val" id="p-val">—</span><span class="npk-unit">কেজি / হেক্টর</span></div>
+        <div class="npk-card k"><span class="npk-tag">K</span><span class="npk-name">পটাশ (K₂O)</span><span class="npk-val" id="k-val">—</span><span class="npk-unit">কেজি / হেক্টর</span></div>
       </div>
 
       <div class="bags-card">
-        <h3>Bag counts for your area</h3>
-        <p class="bags-sub">Urea 50 kg · TSP 50 kg · MoP 50 kg · Gypsum 25 kg</p>
+        <h3>আপনার জমির জন্য বস্তার সংখ্যা</h3>
+        <p class="bags-sub">ইউরিয়া ৫০ কেজি · টিএসপি ৫০ কেজি · এমওপি ৫০ কেজি · জিপসাম ২৫ কেজি</p>
         <ul class="bags-list" id="bags"></ul>
       </div>
 
       <p class="fz-crop-note" id="crop-note"></p>
     </section>
 
-    <p class="fz-foot">Built with vanilla HTML/CSS/JS · Ilhan Mansiz Jisan</p>
+    <p class="fz-foot">তৈরি: বিশুদ্ধ HTML/CSS/JS · ইলহান মানসিজ জিসান</p>
   </main>
 
   <script src="fertilizer.js" defer></script>
